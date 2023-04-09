@@ -1,0 +1,30 @@
+$border: #33333321;
+
+.title {
+  // border: 1px solid $border;
+  filter: drop-shadow(1px 1px 5px $border);
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #fff;
+}
+
+.menu {
+  filter: drop-shadow(1px 1px 5px $border);
+  max-width: 300px;
+}
+
+.list {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #fff;
+  &Option {
+    padding: 10px;
+    color: #333;
+    display: block;
+    transform-origin: -20px 50%;
+    cursor: pointer;
+  }
+}
