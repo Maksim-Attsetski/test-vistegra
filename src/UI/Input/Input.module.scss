@@ -1,0 +1,36 @@
+$border: #33333370;
+
+
+.container {
+  position: relative;
+  max-width: 300px;
+  &.focused {
+    .label {
+      top: -25%;
+      left: 10%;
+      font-size: 14px;
+      letter-spacing: 1px;
+      background-color: #e2e2e2;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+  }
+  .label {
+    position: absolute;
+    top: 25%;
+    left: 5%;
+    z-index: 2;
+    font-size: 16px;
+    letter-spacing: 0px;
+    transition: all ease-in-out 0.2s;
+  }
+  .input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    // border: 1px solid #333;
+    border: none;
+    background-color: #fff;
+    filter: drop-shadow(1px 1px 3px $border);
+  }
+}

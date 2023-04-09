@@ -35,7 +35,7 @@ const Select: FC<IProps> = ({ onChange, options, value }) => {
   useOnClickOutside(ref, onClose);
 
   return (
-    <div className={s.menu}>
+    <div className={s.menu} ref={ref}>
       <motion.div
         className={s.title}
         whileTap={{ scale: 0.97 }}
