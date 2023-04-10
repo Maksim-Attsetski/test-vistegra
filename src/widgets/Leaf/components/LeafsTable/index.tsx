@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 
 import { useLeaf } from 'widgets/Leaf';
 import { Button, Gap, Table } from 'UI';
@@ -6,16 +6,20 @@ import { Button, Gap, Table } from 'UI';
 import s from './LeafsTable.module.scss';
 
 const LeafsTable: FC = () => {
-  const { calcResult } = useLeaf();
+  const { calcResult, onAddToLeafBasket } = useLeaf();
 
   return (
     <div>
-      {calcResult.length > 0 && (
+      {calcResult.length > 0 ? (
         <>
           <Table head={['Название', 'Количество', 'Цена']} rows={calcResult} />
           <Gap y={15} />
-          <Button>Добавить изделие в корзину</Button>
+          <Button onClick={() => onAddToLeafBasket()}>
+            Добавить изделие в корзину
+          </Button>
         </>
+      ) : (
+        <div>Здесь будет результат изделия</div>
       )}
     </div>
   );

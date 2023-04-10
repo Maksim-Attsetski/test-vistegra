@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ILeaf } from './types';
+import { ILeaf, ILeafBasket } from './types';
 import { ICeil } from 'UI';
 
 interface IState {
@@ -7,6 +7,7 @@ interface IState {
   pipes: ILeaf[];
   fixes: ILeaf[];
   calcResult: ICeil[];
+  leafBasket: ILeafBasket[];
 }
 
 const initialState: IState = {
@@ -14,6 +15,7 @@ const initialState: IState = {
   fixes: [],
   pipes: [],
   calcResult: [],
+  leafBasket: [],
 };
 
 const leafSlice = createSlice({
@@ -31,6 +33,17 @@ const leafSlice = createSlice({
     },
     setCalcResultAC: (state: IState, action: PayloadAction<ICeil[]>) => {
       state.calcResult = action.payload;
+    },
+    setLeafBasketAC: (state: IState, action: PayloadAction<ILeafBasket[]>) => {
+      state.leafBasket = action.payload;
+    },
+    addToLeafBasketAC: (state: IState, action: PayloadAction<ILeafBasket>) => {
+      state.leafBasket = [...state.leafBasket, action.payload];
+    },
+    removeFromLeafBasketAC: (state: IState, action: PayloadAction<number>) => {
+      state.leafBasket = state.leafBasket.filter(
+        (el) => el.id !== action.payload
+      );
     },
   },
 });
