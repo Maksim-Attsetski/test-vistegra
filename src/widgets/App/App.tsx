@@ -1,6 +1,6 @@
 import React, { FC, FormEvent, useState } from 'react';
 
-import { Gap, Input, Select } from 'UI';
+import { Button, Flex, Gap, Input, Select } from 'UI';
 import { leafs, leafConfig, IConfig } from 'shared';
 import './App.scss';
 
@@ -118,14 +118,22 @@ const App: FC = () => {
   return (
     <div className='container'>
       <form onSubmit={onSubmit}>
-        <Input value={width} setValue={setWidth} label='Width' type='number' />
-        <Input
-          value={length}
-          setValue={setLength}
-          label='Length'
-          type='number'
-        />
-        <button type='submit'>submit</button>
+        <Flex justify='flex-start'>
+          <Input
+            value={width}
+            setValue={setWidth}
+            label='Width'
+            type='number'
+          />
+          <Input
+            value={length}
+            setValue={setLength}
+            label='Length'
+            type='number'
+          />
+        </Flex>
+        <Gap y={10} />
+        <Button type='submit'>Confirm</Button>
       </form>
       <Gap y={15} />
       <Select

@@ -12,9 +12,17 @@ $border: #33333321;
 .menu {
   filter: drop-shadow(1px 1px 5px $border);
   max-width: 300px;
+  position: relative;
+  z-index: 1;
+  &.active {
+    z-index: 2;
+  }
 }
 
 .list {
+  position: absolute;
+  top: 100%;
+  left: 0;
   margin: 10px 0;
   padding: 10px;
   display: flex;

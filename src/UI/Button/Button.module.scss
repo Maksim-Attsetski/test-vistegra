@@ -1,0 +1,19 @@
+$border: #33333370;
+
+.button {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #fff;
+  filter: drop-shadow(1px 1px 3px $border);
+  cursor: pointer;
+  transition: all linear 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
