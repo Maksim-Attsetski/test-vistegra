@@ -1,10 +1,19 @@
-import React, { FC, memo, useEffect } from 'react';
-import s from './LeafBasketList.module.scss';
+import React, { FC, memo, useEffect, useMemo } from 'react';
+
 import { useLeaf } from 'widgets/Leaf';
-import { Button, Flex, Table } from 'UI';
+import { Flex, Gap } from 'UI';
+import { getCurrency } from 'shared';
+
+import LeafBasketItem from '../LeafBasketItem';
+import s from './LeafBasketList.module.scss';
 
 const LeafBasketList: FC = () => {
-  const { onGetLeafBasket, leafBasket, onRemoveFromLeafBasket } = useLeaf();
+  const { onGetLeafBasket, leafBasket } = useLeaf();
+
+  const totalSumma = useMemo(() => {
+    const price = leafBasket.reduce((prev, cur) => (prev += cur.summa), 0);
+    return getCurrency(price, 'BYN');
+  }, [leafBasket]);
 
   useEffect(() => {
     onGetLeafBasket();
@@ -13,19 +22,12 @@ const LeafBasketList: FC = () => {
   return (
     <Flex justify='space-between'>
       {leafBasket.length > 0 ? (
-        leafBasket.map((item) => (
-          <div key={item.id} className={s.item}>
-            <div>Добавлено: {new Date(item.addedAt).toDateString()}</div>
-            <div>Цена: {item.summa}</div>
-            <Table head={['Название', 'Количество', 'Цена']} rows={item.info} />
-            <Button onClick={() => onRemoveFromLeafBasket(item.id)}>
-              Удалить
-            </Button>
-          </div>
-        ))
+        leafBasket.map((el) => <LeafBasketItem key={el.id} item={el} />)
       ) : (
         <div>Корзина пуста</div>
       )}
+      <Gap y={15} />
+      <div className={s.totalSumma}>Сумма за все: {totalSumma}</div>
     </Flex>
   );
 };
