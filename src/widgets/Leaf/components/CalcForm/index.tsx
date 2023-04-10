@@ -7,6 +7,7 @@ import {
   useActions,
   getCeilFromLeaf,
   validator,
+  logger,
 } from 'shared';
 import { useLeaf } from 'widgets/Leaf';
 
@@ -95,16 +96,19 @@ const CalcForm: FC = () => {
 
       const pipeResult: ICeil = getCeilFromLeaf(
         currentPipe?.name || '',
+        'мп',
         pipeCountInLength + pipeCountInWidth,
         Math.round(leafCount * (currentPipe?.price || 1))
       );
       const leafResult: ICeil = getCeilFromLeaf(
         currentLeaf?.name || '',
+        'м2',
         leafCount,
         Math.round(leafCount * (currentLeaf?.price || 1))
       );
       const fixResult: ICeil = getCeilFromLeaf(
         currentFix.name,
+        'шт',
         fixCount,
         Math.round(fixCount * currentFix.price)
       );
@@ -112,7 +116,7 @@ const CalcForm: FC = () => {
       action.setCalcResultAC([pipeResult, leafResult, fixResult]);
       setErrorText('');
     } catch (error: any) {
-      console.log(error);
+      logger.error(error?.message || error);
       setErrorText(error?.message || error);
     }
   };

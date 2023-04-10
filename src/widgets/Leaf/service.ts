@@ -1,17 +1,17 @@
 // #NOTE This class is needed to send requests to API.
 
-import { LSKeys, leafs, storage } from 'shared';
+import { LSKeys, leafs, logger, storage } from 'shared';
 import { ILeaf, ILeafBasket } from './types';
 
 class LeafService {
   async getLeafs(): Promise<ILeaf[]> {
     try {
       // const res = await axios.get(**endpoint**);
-      console.log('Successfully get leafs', leafs);
+      logger.log('Successfully get leafs', leafs);
 
       return leafs;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      logger.error(error?.message || error);
       throw error; // as example
     }
   }
@@ -19,11 +19,11 @@ class LeafService {
   async getLeafBasket(): Promise<ILeafBasket[]> {
     try {
       // const res = await axios.get(**endpoint**);
-      console.log('Successfully get leaf basket', leafs);
+      logger.log('Successfully get leaf basket', leafs);
 
       return storage.getItem(LSKeys.leafBasket) || [];
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      logger.error(error?.message || error);
       throw error; // as example
     }
   }

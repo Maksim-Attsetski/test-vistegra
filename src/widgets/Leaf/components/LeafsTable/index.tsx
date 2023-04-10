@@ -13,7 +13,7 @@ const LeafsTable: FC = () => {
       {calcResult.length > 0 ? (
         <>
           <Table
-            head={['Название', 'Количество', 'Цена (BYN)']}
+            head={['Название', 'Ед. измерения', 'Количество', 'Цена (BYN)']}
             rows={calcResult}
           />
           <Gap y={15} />

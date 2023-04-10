@@ -30,7 +30,7 @@ const LeafBasketItem: FC<IProps> = ({ item }) => {
             <motion.div animate={{ opacity: 1 }} initial={init} exit={init}>
               <Gap y={10} />
               <Table
-                head={['Название', 'Количество', 'Цена (BYN)']}
+                head={['Название', 'Ед. измерения', 'Количество', 'Цена (BYN)']}
                 rows={item.info}
               />
               <Gap y={15} />
