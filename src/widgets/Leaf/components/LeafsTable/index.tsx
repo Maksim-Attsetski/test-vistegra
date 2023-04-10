@@ -12,7 +12,7 @@ const LeafsTable: FC = () => {
     <div>
       {calcResult.length > 0 && (
         <>
-          <Table head={['Name', 'Count', 'Price']} rows={calcResult} />
+          <Table head={['Название', 'Количество', 'Цена']} rows={calcResult} />
           <Gap y={15} />
           <Button>Добавить изделие в корзину</Button>
         </>

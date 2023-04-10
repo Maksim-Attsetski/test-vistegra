@@ -1,6 +1,6 @@
 import React, { FC, FormEvent, memo, useMemo, useState } from 'react';
 
-import { Button, Flex, Gap, Input, Select, Table, ICeil } from 'UI';
+import { Button, Flex, Gap, Input, Select, ICeil } from 'UI';
 import {
   leafConfig,
   IConfig,
@@ -44,13 +44,15 @@ const CalcForm: FC = () => {
   const [width, setWidth] = useState<string>('');
   const [length, setLength] = useState<string>('');
 
+  const [errorText, setErrorText] = useState<string>('');
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       validator.min(width, inputConfig.width?.min || 0, 'ширины');
-      validator.min(length, inputConfig.length?.min || 0, 'длины');
       validator.max(width, inputConfig.width?.max || 0, 'ширины');
+      validator.min(length, inputConfig.length?.min || 0, 'длины');
       validator.max(length, inputConfig.length?.max || 0, 'длины');
 
       const currentLeaf = leafs.find((leaf) => leaf.name === activeLeaf);
@@ -108,8 +110,10 @@ const CalcForm: FC = () => {
       );
 
       action.setCalcResultAC([pipeResult, leafResult, fixResult]);
-    } catch (error) {
+      setErrorText('');
+    } catch (error: any) {
       console.log(error);
+      setErrorText(error?.message || error);
     }
   };
 
@@ -150,6 +154,12 @@ const CalcForm: FC = () => {
         </Flex>
         <Gap y={15} />
         <Button type='submit'>Подтвердить</Button>
+        {errorText && (
+          <>
+            <Gap y={15} />
+            <div className={s.error}>{errorText}</div>
+          </>
+        )}
       </form>
     </div>
   );
