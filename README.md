@@ -1,4 +1,4 @@
-# Ivashin Test Frontend application
+# Vistegra Test Frontend application
 
 This application is React project.
 
