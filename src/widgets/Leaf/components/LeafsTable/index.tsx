@@ -1,7 +1,9 @@
 import React, { FC, memo } from 'react';
-import s from './LeafsTable.module.scss';
+
 import { useLeaf } from 'widgets/Leaf';
-import { Table } from 'UI';
+import { Button, Gap, Table } from 'UI';
+
+import s from './LeafsTable.module.scss';
 
 const LeafsTable: FC = () => {
   const { calcResult } = useLeaf();
@@ -9,7 +11,11 @@ const LeafsTable: FC = () => {
   return (
     <div>
       {calcResult.length > 0 && (
-        <Table head={['Name', 'Count', 'Price', 'Actions']} rows={calcResult} />
+        <>
+          <Table head={['Name', 'Count', 'Price']} rows={calcResult} />
+          <Gap y={15} />
+          <Button>Добавить изделие в корзину</Button>
+        </>
       )}
     </div>
   );

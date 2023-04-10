@@ -1,7 +1,13 @@
 import React, { FC, FormEvent, memo, useMemo, useState } from 'react';
 
 import { Button, Flex, Gap, Input, Select, Table, ICeil } from 'UI';
-import { leafConfig, IConfig, useActions } from 'shared';
+import {
+  leafConfig,
+  IConfig,
+  useActions,
+  getCeilFromLeaf,
+  validator,
+} from 'shared';
 import { useLeaf } from 'widgets/Leaf';
 
 import s from './CalcForm.module.scss';
@@ -31,9 +37,9 @@ const CalcForm: FC = () => {
     [leafs]
   );
 
-  const [activeLeaf, setActiveLeaf] = useState(leafOptions[0]);
-  const [activePipe, setActivePipe] = useState(pipeOptions[0]);
-  const [activeHardness, setActiveHardness] = useState(hardnessOptions[0]);
+  const [activeLeaf, setActiveLeaf] = useState('Выбери лист');
+  const [activePipe, setActivePipe] = useState('Выбери трубу');
+  const [activeHardness, setActiveHardness] = useState('Выбери твёрдость');
 
   const [width, setWidth] = useState<string>('');
   const [length, setLength] = useState<string>('');
@@ -42,59 +48,36 @@ const CalcForm: FC = () => {
     event.preventDefault();
 
     try {
-      const widthMaxLimit = inputConfig.width?.max || 0;
-      const widthMinLimit = inputConfig.width?.min || 0;
-
-      if (+width > widthMaxLimit) {
-        throw new Error('Max width limit is ' + widthMaxLimit);
-      }
-      if (+width < widthMinLimit) {
-        throw new Error('Min width limit is ' + widthMinLimit);
-      }
-
-      const lengthMaxLimit = inputConfig.length?.max || 0;
-      const lengthMinLimit = inputConfig.length?.min || 0;
-      if (+length > lengthMaxLimit) {
-        throw new Error('Max length limit is ' + lengthMaxLimit);
-      }
-      if (+length < lengthMinLimit) {
-        throw new Error('Min length limit is ' + lengthMinLimit);
-      }
+      validator.min(width, inputConfig.width?.min || 0, 'ширины');
+      validator.min(length, inputConfig.length?.min || 0, 'длины');
+      validator.max(width, inputConfig.width?.max || 0, 'ширины');
+      validator.max(length, inputConfig.length?.max || 0, 'длины');
 
       const currentLeaf = leafs.find((leaf) => leaf.name === activeLeaf);
-      if (!currentLeaf) {
-        throw new Error('Нет такого листа');
-      }
+      validator.isExist(currentLeaf, 'Такого листа');
 
       const currentPipe = pipes.find((pipe) => pipe.name === activePipe);
-      if (!currentPipe) {
-        throw new Error('Нет такой трубы');
-      }
+      validator.isExist(currentPipe, 'Такой трубы');
 
       const currentHardness = leafConfig.find(
         (el) => el.name === activeHardness
       );
-      if (!currentHardness) {
-        throw new Error('Твердость не найдена');
-      }
+      validator.isExist(currentHardness, 'Такой твёердости');
 
       const currentFixConfig = leafConfig.find(
-        (el) => el.key === currentLeaf.material && el.type === 'fix'
+        (el) => el.key === currentLeaf?.material && el.type === 'fix'
       );
       const currentFix = fixes[0];
-
-      if (!currentFix || !currentFixConfig) {
-        throw new Error('Саморезы не найдены');
-      }
+      validator.isExist(currentFix && currentFixConfig, 'Таких саморезов');
 
       const getPipeCount = (isWidth?: boolean): number => {
         // (length мм - pipeWidth мм) / (difference мм + pipeWidth мм) = count труб в погонном метре.
         // (length мм / (pipeWidth мм + difference мм)) x count = всего труб
-        const length = (isWidth ? currentLeaf.width || 1 : 1) * 1000; // length or width of leaf in mm
+        const length = (isWidth ? currentLeaf?.width || 1 : 1) * 1000; // length or width of leaf in mm
         const difference = Math.abs(
           length - (currentHardness?.step || 1) * 1000
         );
-        const pipeWidth = +(currentPipe.width || 1); // width of pipe
+        const pipeWidth = +(currentPipe?.width || 1); // width of pipe
         const pipeCountInMetr = (length - pipeWidth) / (difference + pipeWidth); // pipes in one "мп"
         const pipeCount = (length / (pipeWidth + difference)) * pipeCountInMetr; // all pipes
 
@@ -108,30 +91,22 @@ const CalcForm: FC = () => {
       const pipeCountInWidth = getPipeCount(true);
       const pipeCountInLength = getPipeCount(false);
 
-      const pipeResult: ICeil = {
-        data: [
-          { text: currentPipe.name },
-          { text: pipeCountInLength + pipeCountInWidth },
-          { text: Math.round(leafCount * currentPipe.price) },
-        ],
-        id: '1',
-      };
-      const leafResult: ICeil = {
-        data: [
-          { text: currentLeaf.name },
-          { text: leafCount },
-          { text: Math.round(leafCount * currentLeaf.price) },
-        ],
-        id: '2',
-      };
-      const fixResult: ICeil = {
-        data: [
-          { text: currentFix.name },
-          { text: fixCount },
-          { text: Math.round(fixCount * currentFix.price) },
-        ],
-        id: '3',
-      };
+      const pipeResult: ICeil = getCeilFromLeaf(
+        currentPipe?.name || '',
+        pipeCountInLength + pipeCountInWidth,
+        Math.round(leafCount * (currentPipe?.price || 1))
+      );
+      const leafResult: ICeil = getCeilFromLeaf(
+        currentLeaf?.name || '',
+        leafCount,
+        Math.round(leafCount * (currentLeaf?.price || 1))
+      );
+      const fixResult: ICeil = getCeilFromLeaf(
+        currentFix.name,
+        fixCount,
+        Math.round(fixCount * currentFix.price)
+      );
+
       action.setCalcResultAC([pipeResult, leafResult, fixResult]);
     } catch (error) {
       console.log(error);
@@ -145,37 +120,37 @@ const CalcForm: FC = () => {
           <Input
             value={width}
             setValue={setWidth}
-            label='Width'
+            label='Ширина'
             type='number'
           />
           <Input
             value={length}
             setValue={setLength}
-            label='Length'
+            label='Длина'
             type='number'
           />
         </Flex>
-        <Gap y={10} />
-        <Button type='submit'>Confirm</Button>
+        <Gap y={20} />
+        <Flex justify='flex-start'>
+          <Select
+            options={leafOptions}
+            value={activeLeaf}
+            onChange={setActiveLeaf}
+          />
+          <Select
+            options={pipeOptions}
+            value={activePipe}
+            onChange={setActivePipe}
+          />
+          <Select
+            options={hardnessOptions}
+            value={activeHardness}
+            onChange={setActiveHardness}
+          />
+        </Flex>
+        <Gap y={15} />
+        <Button type='submit'>Подтвердить</Button>
       </form>
-      <Gap y={15} />
-      <Select
-        options={leafOptions}
-        value={activeLeaf}
-        onChange={setActiveLeaf}
-      />
-      <Gap y={10} />
-      <Select
-        options={pipeOptions}
-        value={activePipe}
-        onChange={setActivePipe}
-      />
-      <Gap y={10} />
-      <Select
-        options={hardnessOptions}
-        value={activeHardness}
-        onChange={setActiveHardness}
-      />
     </div>
   );
 };

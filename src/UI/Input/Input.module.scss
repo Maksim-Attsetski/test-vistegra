@@ -23,6 +23,7 @@ $border: #33333370;
     font-size: 16px;
     letter-spacing: 0px;
     transition: all ease-in-out 0.2s;
+    pointer-events: none;
   }
   .input {
     width: 100%;
