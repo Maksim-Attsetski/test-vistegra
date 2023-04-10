@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ILeaf, ILeafBasket } from './types';
 import { ICeil } from 'UI';
+import { storage, LSKeys } from 'shared';
 
 interface IState {
   leafs: ILeaf[];
@@ -38,12 +39,16 @@ const leafSlice = createSlice({
       state.leafBasket = action.payload;
     },
     addToLeafBasketAC: (state: IState, action: PayloadAction<ILeafBasket>) => {
-      state.leafBasket = [...state.leafBasket, action.payload];
+      const newBasket = [...state.leafBasket, action.payload];
+      state.leafBasket = newBasket;
+      storage.setItem(LSKeys.leafBasket, newBasket);
     },
     removeFromLeafBasketAC: (state: IState, action: PayloadAction<number>) => {
-      state.leafBasket = state.leafBasket.filter(
+      const newBasket = state.leafBasket.filter(
         (el) => el.id !== action.payload
       );
+      state.leafBasket = newBasket;
+      storage.setItem(LSKeys.leafBasket, newBasket);
     },
   },
 });

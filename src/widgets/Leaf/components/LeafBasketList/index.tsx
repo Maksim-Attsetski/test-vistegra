@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect } from 'react';
 import s from './LeafBasketList.module.scss';
 import { useLeaf } from 'widgets/Leaf';
-import { Button, Table } from 'UI';
+import { Button, Flex, Table } from 'UI';
 
 const LeafBasketList: FC = () => {
   const { onGetLeafBasket, leafBasket, onRemoveFromLeafBasket } = useLeaf();
@@ -11,10 +11,10 @@ const LeafBasketList: FC = () => {
   }, []);
 
   return (
-    <div>
+    <Flex justify='space-between'>
       {leafBasket.length > 0 ? (
         leafBasket.map((item) => (
-          <div key={item.id}>
+          <div key={item.id} className={s.item}>
             <div>Добавлено: {new Date(item.addedAt).toDateString()}</div>
             <div>Цена: {item.summa}</div>
             <Table head={['Название', 'Количество', 'Цена']} rows={item.info} />
@@ -26,7 +26,7 @@ const LeafBasketList: FC = () => {
       ) : (
         <div>Корзина пуста</div>
       )}
-    </div>
+    </Flex>
   );
 };
 

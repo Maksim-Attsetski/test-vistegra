@@ -1,6 +1,10 @@
+export const enum LSKeys {
+  leafBasket = 'leafBasket',
+}
+
 class Storage {
-  getItem(key: string) {
-    const itemAsString = localStorage.getItem(key);
+  getItem(key: LSKeys) {
+    const itemAsString = localStorage.getItem(key as string);
 
     const item = itemAsString ? JSON.parse(itemAsString) : null;
     return item;

@@ -1,6 +1,6 @@
 // #NOTE This class is needed to send requests to API.
 
-import { leafs, storage } from 'shared';
+import { LSKeys, leafs, storage } from 'shared';
 import { ILeaf, ILeafBasket } from './types';
 
 class LeafService {
@@ -21,7 +21,7 @@ class LeafService {
       // const res = await axios.get(**endpoint**);
       console.log('Successfully get leaf basket', leafs);
 
-      return storage.getItem('leafBasket') || [];
+      return storage.getItem(LSKeys.leafBasket) || [];
     } catch (error) {
       console.log(error);
       throw error; // as example

@@ -37,6 +37,7 @@ export const useLeaf = (getOnInit?: boolean) => {
       id: Math.random(),
       summa,
     };
+
     action.addToLeafBasketAC(newBasketItem);
   };
 
