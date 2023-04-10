@@ -1,0 +1,25 @@
+$border: 0.5px solid #eeeaea;
+
+.container {
+  overflow-x: auto;
+}
+
+.table {
+  border-spacing: 0;
+  border: $border;
+
+  &__head,
+  &__ceil {
+    border: $border;
+    padding: 7px 13px;
+    cursor: pointer;
+  }
+
+  &__ceil {
+    transition: all 0.3s linear;
+    &:hover {
+      background: #333;
+      color: #eeeaea;
+    }
+  }
+}
